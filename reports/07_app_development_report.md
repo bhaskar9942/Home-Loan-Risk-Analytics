@@ -40,7 +40,7 @@ Evaluated on the notebook's test set (61,503 rows, 4,965 defaulters; same split 
 
 - The saved files reproduce the notebook's reported results exactly (ROC-AUC 0.7529; 2,857 true positives, 2,108 false negatives, 12,194 false positives).
 - The full form loses little (AUC 0.011). Without the three external scores the model is much weaker, and with only the required fields it is close to chance.
-- Calibration: mean predicted probability 8.04% vs actual default rate 8.07%. Predicted and actual rates by band were close (for example 10-20%: predicted 13.8%, actual 14.4%; 20-40%: predicted 26.5%, actual 29.4%). This was checked only on the historical test set.
+- Calibration (all 125 columns): mean predicted probability 8.04% vs actual default rate 8.07%. Predicted and actual rates by band were close (for example 10-20%: predicted 13.8%, actual 14.4%; 20-40%: predicted 26.5%, actual 29.4%). For the 11-field form used on the website, the figures are slightly different: mean predicted 8.03%; 10-20%: predicted 13.7%, actual 14.5%; 20-40%: predicted 26.1%, actual 29.2% (the figures shown on the About page). This was checked only on the historical test set.
 - Cases with only one or two external scores were not evaluated.
 
 

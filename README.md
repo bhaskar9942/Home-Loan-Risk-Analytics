@@ -42,6 +42,12 @@ The overall default rate is 8.07% (24,825 of 307,511 applicants).
 - The three riskiest age-and-score segments hold about 6% of applicants but about 17% of defaulters.
 - Credit history (the other source files) was not analysed in SQL or Power BI.
 
+## Dashboard preview
+
+![Home Loan Risk Analytics Power BI dashboard](app/frontend/assets/dashboard-preview.jpg)
+
+A static preview of the Power BI dashboard; the finished report is `powerbi/home_loan_dashboard.pdf`. It shows overall applicant counts, the default rate by external credit score, age group, income group and occupation, and a loan, income and annuity summary.
+
 ## Technology stack
 
 | Area | Tools |
@@ -114,8 +120,8 @@ Developed and tested on Windows with PowerShell. Python 3.9 is recommended (the 
 **A. Run the web application (no dataset needed)**
 
 ```powershell
-git clone <repository-url>
-cd <repository-folder>
+git clone https://github.com/bhaskar9942/Home-Loan-Risk-Analytics.git
+cd Home-Loan-Risk-Analytics
 python -m venv .venv
 .venv\Scripts\Activate.ps1
 pip install -r requirements.txt
