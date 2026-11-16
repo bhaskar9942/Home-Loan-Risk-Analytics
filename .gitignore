@@ -1,0 +1,24 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Data (not published)
+data/raw/
+*.csv
+
+# Power BI file contains a copy of the data
+*.pbix
+
+# Local safety backups made during development
+app/_backup_*/
+
+# Editor and OS files
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Secrets
+.env
+*.env

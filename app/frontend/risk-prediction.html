@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Risk Prediction | Home Loan Risk Analytics</title>
+  <link rel="stylesheet" href="/static/style.css?v=2">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header">
+    <div class="container nav-bar">
+      <a class="brand" href="/">
+        <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+          <rect width="32" height="32" rx="8" fill="#12a594"/>
+          <path d="M6 16 16 7l10 9v9a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1z" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M12 23v-4M16 23v-7M20 23v-5" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="brand-name">Home Loan Risk Analytics</span>
+      </a>
+      <nav id="site-nav" class="site-nav" aria-label="Main navigation">
+        <a href="/">Home</a>
+        <a href="/risk-prediction">Risk Prediction</a>
+        <a href="/analytics">Analytics</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/about">About</a>
+      </nav>
+      <span id="nav-status" class="status-pill" data-state="checking" role="status">Checking backend...</span>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+    </div>
+  </header>
+
+  <main id="main" class="site-main">
+    <section class="page-header">
+      <div class="container">
+        <h1>Risk Prediction</h1>
+        <p>Enter the applicant's details to estimate default risk. This is a decision-support
+          estimate. It is not a loan decision.</p>
+      </div>
+    </section>
+
+    <div class="container page-body">
+      <div class="predict-layout">
+        <div class="predict-form-col">
+          <p id="status" class="status">Connecting to the backend...</p>
+          <p class="req-note"><span class="req" aria-hidden="true">*</span> Required field</p>
+
+          <form id="applicant-form" novalidate>
+            <fieldset>
+              <legend>Required details</legend>
+              <div class="field-grid">
+                <div class="field">
+                  <label for="loan_type">Loan type <span class="req" aria-hidden="true">*</span></label>
+                  <select id="loan_type" name="loan_type" required aria-required="true" aria-describedby="loan_type-help"></select>
+                  <small id="loan_type-help">Cash loans or revolving loans, as in the training data.</small>
+                </div>
+                <div class="field">
+                  <label for="education">Education <span class="req" aria-hidden="true">*</span></label>
+                  <select id="education" name="education" required aria-required="true" aria-describedby="education-help"></select>
+                  <small id="education-help">The applicant's education level.</small>
+                </div>
+                <div class="field">
+                  <label for="income">Income <span class="req" aria-hidden="true">*</span></label>
+                  <input type="number" id="income" name="income" min="1" step="any" required aria-required="true" aria-describedby="income-help">
+                  <small id="income-help">1 to 1,000,000,000. Use the same units as the training data, which does not state whether income is yearly or monthly.</small>
+                </div>
+                <div class="field">
+                  <label for="loan_amount">Loan amount <span class="req" aria-hidden="true">*</span></label>
+                  <input type="number" id="loan_amount" name="loan_amount" min="1" step="any" required aria-required="true" aria-describedby="loan_amount-help">
+                  <small id="loan_amount-help">1 to 1,000,000,000, in the same units as income.</small>
+                </div>
+                <div class="field">
+                  <label for="annuity">Loan annuity (regular repayment) <span class="req" aria-hidden="true">*</span></label>
+                  <input type="number" id="annuity" name="annuity" min="1" step="any" required aria-required="true" aria-describedby="annuity-help">
+                  <small id="annuity-help">1 to 1,000,000,000, in the same units as income.</small>
+                </div>
+                <div class="field">
+                  <label for="age_years">Age in years <span class="req" aria-hidden="true">*</span></label>
+                  <input type="number" id="age_years" name="age_years" min="18" max="100" step="any" required aria-required="true" aria-describedby="age_years-help">
+                  <small id="age_years-help">From 18 to 100.</small>
+                </div>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend>Optional details</legend>
+              <div class="field-grid">
+                <div class="field">
+                  <label for="goods_price">Goods price</label>
+                  <input type="number" id="goods_price" name="goods_price" min="1" step="any" aria-describedby="goods_price-help">
+                  <small id="goods_price-help">Price of the goods the loan is for, if known (1 to 1,000,000,000). If left blank, a typical value is used.</small>
+                </div>
+                <div class="field">
+                  <label for="years_employed">Years employed</label>
+                  <input type="number" id="years_employed" name="years_employed" min="0" max="60" step="any" aria-describedby="years_employed-help">
+                  <small id="years_employed-help">From 0 to 60, and not more than age. If left blank, a typical value is used.</small>
+                </div>
+              </div>
+            </fieldset>
+
+            <fieldset id="scores-fieldset">
+              <legend>External credit scores (optional, strongly recommended)</legend>
+              <p class="hint">Numbers between 0 and 1. These are the model's most important
+                inputs. With fewer scores the estimate is less reliable, and with none
+                entered no risk label is shown. The training data does not describe what
+                each score measures.</p>
+              <p id="score-indicator" class="score-indicator" role="status" hidden>Scores entered: 0 of 3</p>
+              <div class="field-grid">
+                <div class="field">
+                  <label for="ext_source_1">External score 1</label>
+                  <input type="number" id="ext_source_1" name="ext_source_1" min="0" max="1" step="any">
+                </div>
+                <div class="field">
+                  <label for="ext_source_2">External score 2</label>
+                  <input type="number" id="ext_source_2" name="ext_source_2" min="0" max="1" step="any">
+                </div>
+                <div class="field">
+                  <label for="ext_source_3">External score 3</label>
+                  <input type="number" id="ext_source_3" name="ext_source_3" min="0" max="1" step="any">
+                </div>
+              </div>
+            </fieldset>
+
+            <div class="buttons">
+              <button type="submit" id="predict-button">Estimate risk</button>
+              <button type="reset" id="reset-button" class="secondary">Clear form</button>
+            </div>
+          </form>
+
+          <div id="examples" class="examples" hidden>
+            <p class="small">Try an example. Both examples are invented applicants, not real people.</p>
+            <div class="buttons">
+              <button type="button" id="example-a" class="secondary">Load example A (invented applicant)</button>
+              <button type="button" id="example-b" class="secondary">Load example B (invented applicant)</button>
+            </div>
+          </div>
+        </div>
+
+        <aside class="predict-side" aria-label="Result">
+          <section id="result" aria-live="polite"></section>
+        </aside>
+
+        <div class="side-card">
+          <h2>How to read the result</h2>
+          <p><strong>Estimated probability.</strong> The model's estimate of default risk, based
+            on how similar applicants behaved in historical data.</p>
+          <p><strong>Review threshold (10%).</strong> Estimates at or above 10% are marked
+            "Above the review threshold". This flags a case for a closer look. It is not a
+            decision.</p>
+          <p><strong>Reliability.</strong> It depends on how many external scores are entered.
+            With all three it is High. With fewer, a warning explains what testing showed. With
+            none, no risk label is shown.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p><strong>Decision-support tool only.</strong> The model was trained on historical data
+        and shows associations, not causes. It uses information that this site does not collect,
+        including gender, which is filled with a typical value. Fields left blank are also filled
+        with typical values. Do not use it as the only basis for a credit decision.</p>
+      <p>Portfolio project built with Python, SQL, Power BI, Machine Learning and Flask.</p>
+    </div>
+  </footer>
+    <script src="/static/common.js?v=1"></script>
+  <script src="/static/history.js?v=1"></script>
+  <script src="/static/predict.js?v=2"></script>
+</body>
+</html>

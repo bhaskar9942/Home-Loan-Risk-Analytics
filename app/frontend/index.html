@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Home Loan Risk Analytics</title>
+  <meta name="description" content="Estimate home loan default risk with a machine learning model, explore the Power BI dashboard, and see how reliable each estimate is.">
+  <link rel="stylesheet" href="/static/style.css?v=1">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header">
+    <div class="container nav-bar">
+      <a class="brand" href="/">
+        <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+          <rect width="32" height="32" rx="8" fill="#12a594"/>
+          <path d="M6 16 16 7l10 9v9a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1z" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M12 23v-4M16 23v-7M20 23v-5" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="brand-name">Home Loan Risk Analytics</span>
+      </a>
+      <nav id="site-nav" class="site-nav" aria-label="Main navigation">
+        <a href="/">Home</a>
+        <a href="/risk-prediction">Risk Prediction</a>
+        <a href="/analytics">Analytics</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/about">About</a>
+      </nav>
+      <span id="nav-status" class="status-pill" data-state="checking" role="status">Checking backend...</span>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+    </div>
+  </header>
+
+  <main id="main" class="site-main">
+    <section class="hero">
+      <div class="container">
+        <span class="eyebrow">Machine learning, SQL and Power BI</span>
+        <h1>Understand home loan default risk</h1>
+        <p class="lead">Estimate the default risk of a loan applicant with a model trained on
+          307,511 historical applicants, see how reliable each estimate is, and explore the
+          findings in a Power BI dashboard.</p>
+        <div class="hero-actions">
+          <a class="btn btn-light" href="/risk-prediction">Estimate risk</a>
+          <a class="btn btn-outline" href="/dashboard">View dashboard</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="container facts-wrap">
+      <div class="facts">
+        <div class="fact">
+          <div class="value">307,511</div>
+          <div class="name">Applicants analysed</div>
+          <div class="source">Training dataset</div>
+        </div>
+        <div class="fact">
+          <div class="value">8.07%</div>
+          <div class="name">Historical default rate</div>
+          <div class="source">24,825 of 307,511 applicants</div>
+        </div>
+        <div class="fact">
+          <div class="value">0.7529</div>
+          <div class="name">ROC-AUC, complete records</div>
+          <div class="source">Test set of 61,503 applicants</div>
+        </div>
+        <div class="fact">
+          <div class="value">0.7418</div>
+          <div class="name">ROC-AUC, 11-field form</div>
+          <div class="source">Same test set</div>
+        </div>
+        <div class="fact">
+          <div class="value">12</div>
+          <div class="name">SQL business questions</div>
+          <div class="source">MySQL analysis</div>
+        </div>
+      </div>
+    </div>
+
+    <section class="section">
+      <div class="container">
+        <h2 class="section-title">How it works</h2>
+        <p class="section-intro">Three steps from applicant details to a result you can read at a glance.</p>
+        <div class="steps">
+          <div class="step">
+            <h3>Enter the details</h3>
+            <p>Fill in the six required fields and, ideally, the external credit scores. The
+              other fields can be left blank.</p>
+          </div>
+          <div class="step">
+            <h3>The model estimates the risk</h3>
+            <p>A Gradient Boosting model trained on historical loan data returns an estimated
+              default probability.</p>
+          </div>
+          <div class="step">
+            <h3>Review the result</h3>
+            <p>See the estimate next to the 10% review threshold, with a reliability level and
+              any warnings.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <h2 class="section-title">What you can do here</h2>
+        <p class="section-intro">The project combines a prediction tool with the analysis behind it.</p>
+        <div class="cards">
+          <article class="feature">
+            <div class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 4a9 9 0 0 0-9 9h2M12 4a9 9 0 0 1 9 9h-2M12 13l4-4"/></svg></div>
+            <h3>Risk estimate</h3>
+            <p>See the estimated probability next to the 10% review threshold and the 8.07%
+              historical default rate.</p>
+          </article>
+          <article class="feature">
+            <div class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5L15.5 10"/></svg></div>
+            <h3>Reliability awareness</h3>
+            <p>When external scores are missing, the estimate carries a reliability level and a
+              warning based on measured test results. With no scores, no risk label is shown.</p>
+          </article>
+          <article class="feature">
+            <div class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 20V11M10 20V5M16 20v-7M2 20h20"/></svg></div>
+            <h3>Power BI dashboard</h3>
+            <p>Explore default rates by credit score, age, occupation and income in the dashboard
+              built from the MySQL data.</p>
+          </article>
+          <article class="feature">
+            <div class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+            <h3>Session analytics</h3>
+            <p>Review the predictions made during your current session, kept separate from the
+              historical data.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="callout">
+          <p><strong>A decision-support tool.</strong> The estimate reflects how similar
+            historical applicants behaved. It is not a loan decision, and it does not mean any
+            applicant will default. Read the <a href="/about">About page</a> for the limitations.</p>
+        </div>
+        <p style="margin-top: 24px;"><a class="btn" href="/risk-prediction">Go to Risk Prediction</a></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p><strong>Decision-support tool only.</strong> The model was trained on historical data
+        and shows associations, not causes. It uses information that this site does not collect,
+        including gender, which is filled with a typical value. Fields left blank are also filled
+        with typical values. Do not use it as the only basis for a credit decision.</p>
+      <p>Portfolio project built with Python, SQL, Power BI, Machine Learning and Flask.</p>
+    </div>
+  </footer>
+  <script src="/static/common.js?v=1"></script>
+</body>
+</html>

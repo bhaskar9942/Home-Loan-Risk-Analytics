@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Analytics | Home Loan Risk Analytics</title>
+  <link rel="stylesheet" href="/static/style.css?v=6">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header">
+    <div class="container nav-bar">
+      <a class="brand" href="/">
+        <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+          <rect width="32" height="32" rx="8" fill="#12a594"/>
+          <path d="M6 16 16 7l10 9v9a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1z" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M12 23v-4M16 23v-7M20 23v-5" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="brand-name">Home Loan Risk Analytics</span>
+      </a>
+      <nav id="site-nav" class="site-nav" aria-label="Main navigation">
+        <a href="/">Home</a>
+        <a href="/risk-prediction">Risk Prediction</a>
+        <a href="/analytics">Analytics</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/about">About</a>
+      </nav>
+      <span id="nav-status" class="status-pill" data-state="checking" role="status">Checking backend...</span>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+    </div>
+  </header>
+
+  <main id="main" class="site-main">
+    <section class="page-header">
+      <div class="container">
+        <h1>Analytics</h1>
+        <p>Historical project figures and this session's estimates, kept clearly separate.</p>
+      </div>
+    </section>
+
+    <div class="container page-body">
+            <section id="historical" class="an-section" aria-labelledby="historical-title">
+        <h2 id="historical-title">Historical project data</h2>
+        <p class="section-intro">Fixed figures from the project's dataset and test set. They do not
+          change when you make estimates. They were measured once, on the 61,503 applicants held
+          out from training, and are not updated automatically.</p>
+
+        <div class="summary-cards">
+          <div class="stat-card">
+            <div class="label">Applicants analysed</div>
+            <div class="value">307,511</div>
+            <div class="sub">Training dataset</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Historical default rate</div>
+            <div class="value">8.07%</div>
+            <div class="sub">24,825 defaulters</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">ROC-AUC, complete records</div>
+            <div class="value">0.7529</div>
+            <div class="sub">Test set, 61,503 applicants</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">ROC-AUC, 11-field form</div>
+            <div class="value">0.7418</div>
+            <div class="sub">Same test set</div>
+          </div>
+        </div>
+
+        <figure class="chart" id="chart-auc">
+          <figcaption>ROC-AUC by external scores entered</figcaption>
+          <p class="chart-note">ROC-AUC shows how well the model ranks riskier applicants above
+            safer ones: 0.5 is random guessing and 1.0 is perfect. The model does best with all
+            three external scores and worst with none.</p>
+          <div id="auc-chart"></div>
+          <details>
+            <summary>View as table</summary>
+            <div class="table-wrap" role="region" aria-label="ROC-AUC by external scores entered table" tabindex="0">
+              <table id="auc-table" class="data-table">
+                <caption>ROC-AUC by external scores entered (test set, threshold 10%)</caption>
+                <thead>
+                  <tr><th scope="col">Scores entered</th><th scope="col">Reliability</th><th scope="col" class="num">ROC-AUC</th><th scope="col" class="num">Defaulters identified</th></tr>
+                </thead>
+                <tbody>
+                  <tr data-label="Scores 1, 2, 3" data-auc="0.7418"><th scope="row">1, 2 and 3</th><td>High</td><td class="num">0.742</td><td class="num">56.2%</td></tr>
+                  <tr data-label="Scores 2, 3" data-auc="0.7339"><th scope="row">2 and 3</th><td>Slightly reduced</td><td class="num">0.734</td><td class="num">55.7%</td></tr>
+                  <tr data-label="Scores 1, 3" data-auc="0.7089"><th scope="row">1 and 3</th><td>Reduced</td><td class="num">0.709</td><td class="num">39.2%</td></tr>
+                  <tr data-label="Scores 1, 2" data-auc="0.7081"><th scope="row">1 and 2</th><td>Reduced</td><td class="num">0.708</td><td class="num">46.6%</td></tr>
+                  <tr data-label="Score 2 only" data-auc="0.6968"><th scope="row">Score 2 only</th><td>Low</td><td class="num">0.697</td><td class="num">45.3%</td></tr>
+                  <tr data-label="Score 3 only" data-auc="0.6950"><th scope="row">Score 3 only</th><td>Low</td><td class="num">0.695</td><td class="num">37.2%</td></tr>
+                  <tr data-label="Score 1 only" data-auc="0.6652"><th scope="row">Score 1 only</th><td>Very low</td><td class="num">0.665</td><td class="num">14.6%</td></tr>
+                  <tr data-label="No scores" data-auc="0.6444" data-none="true"><th scope="row">None</th><td>No risk label shown</td><td class="num">0.644</td><td class="num">8.2%</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </details>
+        </figure>
+
+        <figure class="chart" id="chart-calibration">
+          <figcaption>Estimates compared with actual outcomes</figcaption>
+          <p class="chart-note">Test set, using the 11 form fields. Applicants are grouped by the
+            estimate the model gave them. The closer the two bars, the better the estimates match
+            what really happened. Overall, the average estimate was 8.03% and the actual default
+            rate was 8.07%. The 40% and above group is small, so its figures are less reliable.</p>
+          <div id="calibration-chart"></div>
+          <details>
+            <summary>View as table</summary>
+            <div class="table-wrap" role="region" aria-label="Estimates compared with actual outcomes table" tabindex="0">
+              <table id="calibration-table" class="data-table">
+                <caption>Estimates compared with actual outcomes (test set, 11 form fields)</caption>
+                <thead>
+                  <tr><th scope="col">Estimate range</th><th scope="col" class="num">Applicants</th><th scope="col" class="num">Average estimate</th><th scope="col" class="num">Actually defaulted</th></tr>
+                </thead>
+                <tbody>
+                  <tr data-n="25614" data-estimate="3.5" data-actual="2.9"><th scope="row">Under 5%</th><td class="num">25,614</td><td class="num">3.5%</td><td class="num">2.9%</td></tr>
+                  <tr data-n="20809" data-estimate="7.0" data-actual="6.9"><th scope="row">5% to 10%</th><td class="num">20,809</td><td class="num">7.0%</td><td class="num">6.9%</td></tr>
+                  <tr data-n="11312" data-estimate="13.7" data-actual="14.5"><th scope="row">10% to 20%</th><td class="num">11,312</td><td class="num">13.7%</td><td class="num">14.5%</td></tr>
+                  <tr data-n="3493" data-estimate="26.1" data-actual="29.2"><th scope="row">20% to 40%</th><td class="num">3,493</td><td class="num">26.1%</td><td class="num">29.2%</td></tr>
+                  <tr data-n="275" data-estimate="47.0" data-actual="45.5"><th scope="row">40% and above</th><td class="num">275</td><td class="num">47.0%</td><td class="num">45.5%</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </details>
+        </figure>
+      </section>
+      <section id="session" class="an-section" aria-labelledby="session-title">
+        <h2 id="session-title">This session's estimates</h2>
+        <div class="callout">
+          <p><strong>These are not real loan outcomes.</strong> They are the estimates this tool
+            produced in your current browser tab, for the values you entered, and they say nothing
+            about the historical dataset. Only a short summary of each estimate is kept (time, loan
+            type, which external scores were entered, the estimate and its reliability). Amounts,
+            age, education and score values are never stored, and everything disappears when you
+            close the tab.</p>
+        </div>
+
+        <div id="storage-note" class="notice" hidden>
+          <h2>Session storage is not available</h2>
+          <p>Your browser is blocking session storage, so estimates cannot be kept between pages
+            and none will appear here.</p>
+        </div>
+
+        <div id="session-empty" class="empty-state" hidden>
+          <p><strong>No estimates yet in this session.</strong></p>
+          <p>Make an estimate on the Risk Prediction page and it will appear here.</p>
+          <a class="btn" href="/risk-prediction">Go to Risk Prediction</a>
+        </div>
+
+        <div id="session-content" hidden>
+          <div class="filters">
+            <div class="field">
+              <label for="filter-reliability">Reliability</label>
+              <select id="filter-reliability">
+                <option value="all">All</option>
+                <option value="High">High</option>
+                <option value="Slightly reduced">Slightly reduced</option>
+                <option value="Reduced">Reduced</option>
+                <option value="Low">Low</option>
+                <option value="Very low">Very low</option>
+                <option value="none">No risk label</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="filter-result">Result</label>
+              <select id="filter-result">
+                <option value="all">All</option>
+                <option value="above">Above the review threshold</option>
+                <option value="below">Below the review threshold</option>
+              </select>
+            </div>
+            <div class="buttons">
+              <button type="button" id="clear-history" class="secondary">Clear history</button>
+            </div>
+          </div>
+          <p id="session-count" class="small"></p>
+
+          <div class="summary-cards">
+            <div class="stat-card">
+              <div class="label">Estimates with a risk label</div>
+              <div id="card-labelled" class="value">0</div>
+              <div id="card-nolabel" class="sub"></div>
+            </div>
+            <div class="stat-card">
+              <div class="label">Average estimate</div>
+              <div id="card-average" class="value">n/a</div>
+              <div class="sub">Mean of the estimates shown</div>
+            </div>
+            <div class="stat-card">
+              <div class="label">Above the review threshold</div>
+              <div id="card-above" class="value">n/a</div>
+              <div id="card-above-sub" class="sub"></div>
+            </div>
+            <div class="stat-card">
+              <div class="label">By reliability</div>
+              <ul id="reliability-counts" class="rel-list"></ul>
+            </div>
+          </div>
+
+          <figure class="chart">
+            <figcaption>Estimates by range</figcaption>
+            <div id="histogram"></div>
+            <details>
+              <summary>View as table</summary>
+              <div class="table-wrap" role="region" aria-label="Estimates by range table" tabindex="0">
+                <table class="data-table">
+                  <caption>Number of estimates in each range</caption>
+                  <thead><tr><th scope="col">Range</th><th scope="col" class="num">Estimates</th></tr></thead>
+                  <tbody id="histogram-body"></tbody>
+                </table>
+              </div>
+            </details>
+          </figure>
+
+          <div class="table-wrap" role="region" aria-label="Session history table" tabindex="0">
+            <table class="data-table wide">
+              <caption>Estimates from this session (newest first, up to 100)</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Time</th>
+                  <th scope="col">Loan type</th>
+                  <th scope="col">Scores entered</th>
+                  <th scope="col" class="num">Estimate</th>
+                  <th scope="col">Result</th>
+                  <th scope="col">Reliability</th>
+                  <th scope="col">Source</th>
+                </tr>
+              </thead>
+              <tbody id="history-body"></tbody>
+            </table>
+          </div>
+        </div>
+        <p id="session-live" class="small" role="status"></p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p><strong>Decision-support tool only.</strong> The model was trained on historical data
+        and shows associations, not causes. It uses information that this site does not collect,
+        including gender, which is filled with a typical value. Fields left blank are also filled
+        with typical values. Do not use it as the only basis for a credit decision.</p>
+      <p>Portfolio project built with Python, SQL, Power BI, Machine Learning and Flask.</p>
+    </div>
+  </footer>
+    <script src="/static/common.js?v=1"></script>
+  <script src="/static/history.js?v=1"></script>
+  <script src="/static/analytics.js?v=1"></script>
+  <script src="/static/historical.js?v=1"></script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard | Home Loan Risk Analytics</title>
+  <link rel="stylesheet" href="/static/style.css?v=3">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header">
+    <div class="container nav-bar">
+      <a class="brand" href="/">
+        <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+          <rect width="32" height="32" rx="8" fill="#12a594"/>
+          <path d="M6 16 16 7l10 9v9a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1z" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M12 23v-4M16 23v-7M20 23v-5" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="brand-name">Home Loan Risk Analytics</span>
+      </a>
+      <nav id="site-nav" class="site-nav" aria-label="Main navigation">
+        <a href="/">Home</a>
+        <a href="/risk-prediction">Risk Prediction</a>
+        <a href="/analytics">Analytics</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/about">About</a>
+      </nav>
+      <span id="nav-status" class="status-pill" data-state="checking" role="status">Checking backend...</span>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+    </div>
+  </header>
+
+  <main id="main" class="site-main">
+    <section class="page-header">
+      <div class="container">
+        <h1>Power BI Dashboard</h1>
+        <p>Default risk across 307,511 historical applicants, built in Power BI from the MySQL
+          data. This page shows a PDF export of the dashboard.</p>
+      </div>
+    </section>
+
+    <div class="container page-body">
+      <div id="dash-toolbar" class="dash-toolbar">
+        <div class="dash-actions">
+          <a class="btn" href="/dashboard.pdf" target="_blank" rel="noopener">Open in new tab</a>
+          <a class="btn btn-secondary" href="/dashboard.pdf" download="home_loan_dashboard.pdf">Download PDF</a>
+          <span id="pdf-size" class="small" hidden></span>
+        </div>
+      </div>
+
+      <noscript>
+        <p class="small">JavaScript is turned off, so the dashboard cannot be shown inside this
+          page. Use the buttons above to open or download the PDF.</p>
+      </noscript>
+
+      <div id="dash-viewer" class="dash-viewer" hidden>
+        <iframe id="dash-frame" class="dash-frame" data-src="/dashboard.pdf#navpanes=0&view=Fit"
+          title="Power BI home loan risk dashboard (PDF export)"></iframe>
+      </div>
+
+      <div id="dash-fallback" class="dash-fallback" hidden>
+        <p id="dash-fallback-message">Your browser cannot show the PDF inside this page. Use the
+          buttons above to open or download it. A preview image is shown below.</p>
+        <a href="/dashboard.pdf" target="_blank" rel="noopener">
+          <img src="/static/assets/dashboard-preview.jpg" width="1600" height="1015" loading="lazy"
+            alt="Preview of the Power BI home loan risk dashboard: portfolio totals, default rate by external credit score, age group, occupation and income group, and a loan comparison table.">
+        </a>
+      </div>
+
+      <div id="dash-missing" class="notice" role="alert" hidden>
+        <h2>The dashboard PDF is not available</h2>
+        <p>The file <code>powerbi/home_loan_dashboard.pdf</code> could not be found on the
+          server. Export the dashboard from Power BI Desktop to that name and reload this page.</p>
+      </div>
+
+      <p class="dash-note small">This is a static snapshot (a PDF export). The slicers shown in it
+        cannot be clicked here, and it does not update when the data changes. The interactive
+        version is the Power BI file <code>powerbi/home_loan_dashboard.pbix</code>, which opens in
+        Power BI Desktop. The dashboard reads a MySQL view with 12 columns
+        (<code>vw_dashboard_applicants</code>), and every chart and slicer was checked against the
+        SQL results.</p>
+
+      <section class="section">
+        <h2 class="section-title">Key findings</h2>
+        <p class="section-intro">Each figure comes from the SQL analysis and also appears in the
+          Power BI dashboard. They describe patterns in historical data, not causes.</p>
+        <div class="findings">
+          <article class="finding">
+            <div class="stat">8.07%</div>
+            <h3>Historical default rate</h3>
+            <p>24,825 of 307,511 applicants defaulted, about 1 in 12. This is the baseline for
+              every comparison.</p>
+          </article>
+          <article class="finding">
+            <div class="stat">18.84%</div>
+            <h3>Lowest external credit scores</h3>
+            <p>Applicants with external score 2 below 0.2 defaulted at 18.84%, against 4.57% for
+              scores of 0.6 to 0.8. This was the clearest split in the SQL analysis.</p>
+          </article>
+          <article class="finding">
+            <div class="stat">11.46%</div>
+            <h3>Younger applicants</h3>
+            <p>Applicants under 30 defaulted at 11.46%, against 4.92% for those aged 60 and
+              above. The rate fell at every age step.</p>
+          </article>
+          <article class="finding">
+            <div class="stat">17.15%</div>
+            <h3>Occupation</h3>
+            <p>Low-skill Laborers had the highest rate, but it is a small group of 2,093
+              applicants. Accountants had the lowest (4.83%). Laborers account for the most
+              defaulters overall, 23.52% of all.</p>
+          </article>
+          <article class="finding">
+            <div class="stat">5.95%</div>
+            <h3>Income</h3>
+            <p>Applicants in the 300,000 and above band defaulted at 5.95%. There was no steady
+              pattern below that, and the highest rate was 8.62% for 100,000 to 149,999.</p>
+          </article>
+        </div>
+        <div class="callout" style="margin-top: 20px;">
+          <p>These are associations in historical data, not causes. Occupation, age and income
+            should not be used on their own to approve or reject an applicant.</p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p><strong>Decision-support tool only.</strong> The model was trained on historical data
+        and shows associations, not causes. It uses information that this site does not collect,
+        including gender, which is filled with a typical value. Fields left blank are also filled
+        with typical values. Do not use it as the only basis for a credit decision.</p>
+      <p>Portfolio project built with Python, SQL, Power BI, Machine Learning and Flask.</p>
+    </div>
+  </footer>
+  <script src="/static/common.js?v=1"></script>
+  <script src="/static/dashboard.js?v=1"></script>
+</body>
+</html>

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>About | Home Loan Risk Analytics</title>
+  <link rel="stylesheet" href="/static/style.css?v=4">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header">
+    <div class="container nav-bar">
+      <a class="brand" href="/">
+        <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+          <rect width="32" height="32" rx="8" fill="#12a594"/>
+          <path d="M6 16 16 7l10 9v9a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1z" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M12 23v-4M16 23v-7M20 23v-5" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="brand-name">Home Loan Risk Analytics</span>
+      </a>
+      <nav id="site-nav" class="site-nav" aria-label="Main navigation">
+        <a href="/">Home</a>
+        <a href="/risk-prediction">Risk Prediction</a>
+        <a href="/analytics">Analytics</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/about">About</a>
+      </nav>
+      <span id="nav-status" class="status-pill" data-state="checking" role="status">Checking backend...</span>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+    </div>
+  </header>
+
+  <main id="main" class="site-main">
+    <section class="page-header">
+      <div class="container">
+        <h1>About and How to Use</h1>
+        <p>The problem, how the model works, how to read the result, and what it cannot do.</p>
+      </div>
+    </section>
+
+    <div class="container page-body">
+      <div class="about-layout">
+        <nav class="toc" aria-label="On this page">
+          <h2>On this page</h2>
+          <ol>
+            <li><a href="#problem">The problem</a></li>
+            <li><a href="#built">How it was built</a></li>
+            <li><a href="#how">How a prediction works</a></li>
+            <li><a href="#fields">Entering details</a></li>
+            <li><a href="#result">Reading the result</a></li>
+            <li><a href="#reliability">Missing external scores</a></li>
+            <li><a href="#limits">Limitations</a></li>
+            <li><a href="#tech">Technology</a></li>
+            <li><a href="#faq">Questions</a></li>
+          </ol>
+        </nav>
+
+        <div class="prose">
+          <section id="problem">
+            <h2>The problem</h2>
+            <p>A lender receives many home loan applications and cannot review every one in depth.
+              If it can see which applicants resemble past borrowers who defaulted, it can spend
+              more review effort where it matters. This project analyses 307,511 historical
+              applications, of which 24,825 (8.07%) defaulted, and builds a tool that estimates the
+              default risk of an applicant.</p>
+            <p>The tool supports a human reviewer. It does not approve or reject anyone.</p>
+          </section>
+
+          <section id="built">
+            <h2>How it was built</h2>
+            <ul>
+              <li><strong>Python and machine learning.</strong> Data checks, cleaning, feature
+                engineering and a Gradient Boosting model. On a held-out test set of 61,503
+                applicants it reaches a ROC-AUC of 0.7529 using complete records. ROC-AUC measures
+                how well a model ranks riskier applicants above safer ones: 0.5 is chance and 1.0
+                is perfect.</li>
+              <li><strong>SQL (MySQL).</strong> The data was loaded into a MySQL database and 12
+                business questions were answered, such as default rate by credit score, age,
+                occupation and income.</li>
+              <li><strong>Power BI.</strong> A dashboard built from the MySQL data, with every
+                figure checked against the SQL results. See the <a href="/dashboard">Dashboard</a>
+                page.</li>
+              <li><strong>Flask web app.</strong> This website. A small Python backend passes the
+                form values to the saved model. Nothing is retrained.</li>
+            </ul>
+          </section>
+
+          <section id="how">
+            <h2>How a prediction works</h2>
+            <ol class="flow">
+              <li><strong>You enter the details.</strong> Six fields are required and five are
+                optional.</li>
+              <li><strong>The backend checks them.</strong> Every value must be in its allowed
+                range.</li>
+              <li><strong>A row for the model is built.</strong> The model expects 125 input
+                columns. The form fills up to 15 of them: the 11 fields, plus four values
+                calculated from them (age in years, a loan-to-income ratio, an annuity-to-income
+                ratio and an employment flag).</li>
+              <li><strong>Blanks are filled with typical values.</strong> The saved preprocessor
+                fills every other column with typical values from the training data, the same way
+                it handles missing values in the original data.</li>
+              <li><strong>The model estimates the probability.</strong> The saved Gradient
+                Boosting model (100 trees) returns an estimated probability of default.</li>
+              <li><strong>The result is labelled.</strong> The estimate is compared with the 10%
+                review threshold, and a reliability level is set from how many external scores
+                were entered.</li>
+            </ol>
+          </section>
+
+          <section id="fields">
+            <h2>Entering details</h2>
+            <p>Required fields must be filled. Optional fields can be left blank, and a typical
+              value is used instead. The training data does not say whether income is yearly or
+              monthly, so enter income, loan amount and loan annuity in the same units. The two
+              example buttons on the <a href="/risk-prediction">Risk Prediction</a> page fill the
+              form with invented applicants, not real people.</p>
+            <div class="table-wrap" role="region" aria-label="Field guide table" tabindex="0">
+              <table class="data-table">
+                <caption>Field guide</caption>
+                <thead>
+                  <tr><th scope="col">Field</th><th scope="col">Required</th><th scope="col">Allowed values</th><th scope="col">Notes</th></tr>
+                </thead>
+                <tbody>
+                  <tr><th scope="row">Loan type</th><td>Yes</td><td>Cash loans, Revolving loans</td><td>As in the training data.</td></tr>
+                  <tr><th scope="row">Education</th><td>Yes</td><td>Academic degree, Higher education, Incomplete higher, Lower secondary, Secondary / secondary special</td><td>The applicant's education level.</td></tr>
+                  <tr><th scope="row">Income</th><td>Yes</td><td>1 to 1,000,000,000</td><td>Units are not stated in the data.</td></tr>
+                  <tr><th scope="row">Loan amount</th><td>Yes</td><td>1 to 1,000,000,000</td><td>Same units as income.</td></tr>
+                  <tr><th scope="row">Loan annuity</th><td>Yes</td><td>1 to 1,000,000,000</td><td>The regular repayment amount, in the same units.</td></tr>
+                  <tr><th scope="row">Age in years</th><td>Yes</td><td>18 to 100</td><td></td></tr>
+                  <tr><th scope="row">Goods price</th><td>No</td><td>1 to 1,000,000,000</td><td>If blank, a typical value is used.</td></tr>
+                  <tr><th scope="row">Years employed</th><td>No</td><td>0 to 60, and not more than age</td><td>If blank, a typical value is used.</td></tr>
+                  <tr><th scope="row">External scores 1, 2 and 3</th><td>No, but strongly recommended</td><td>0 to 1</td><td>The model's most important inputs. The data does not describe what they measure. At least one is needed for a risk label.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section id="result">
+            <h2>Reading the result</h2>
+            <h3>The estimated probability</h3>
+            <p>The estimate is the model's probability that an applicant like this defaulted. On
+              the test set it matched real default rates closely: the average estimate was 8.03%,
+              against an actual rate of 8.07%. The table groups test applicants by their estimate
+              and compares it with what actually happened.</p>
+            <div class="table-wrap" role="region" aria-label="Calibration table" tabindex="0">
+              <table class="data-table">
+                <caption>Estimates compared with actual outcomes (test set, 11 form fields)</caption>
+                <thead>
+                  <tr><th scope="col">Estimate range</th><th scope="col" class="num">Applicants</th><th scope="col" class="num">Average estimate</th><th scope="col" class="num">Actually defaulted</th></tr>
+                </thead>
+                <tbody>
+                  <tr><th scope="row">Under 5%</th><td class="num">25,614</td><td class="num">3.5%</td><td class="num">2.9%</td></tr>
+                  <tr><th scope="row">5% to 10%</th><td class="num">20,809</td><td class="num">7.0%</td><td class="num">6.9%</td></tr>
+                  <tr><th scope="row">10% to 20%</th><td class="num">11,312</td><td class="num">13.7%</td><td class="num">14.5%</td></tr>
+                  <tr><th scope="row">20% to 40%</th><td class="num">3,493</td><td class="num">26.1%</td><td class="num">29.2%</td></tr>
+                  <tr><th scope="row">40% and above</th><td class="num">275</td><td class="num">47.0%</td><td class="num">45.5%</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="table-note">The 40% and above group is small, so its figures are less reliable.
+              The model slightly under-estimates risk in the 20% to 40% range.</p>
+
+            <h3>The review threshold</h3>
+            <p>The review threshold is 10%. An estimate at or above it is labelled "Above the
+              review threshold", which flags the case for a closer look. An estimate below it is
+              labelled "Below the review threshold". Neither label is a decision. A person should
+              make the final decision.</p>
+            <div class="table-wrap" role="region" aria-label="Threshold table" tabindex="0">
+              <table class="data-table">
+                <caption>What the 10% threshold did on the test set (61,503 applicants, 4,965 defaulters)</caption>
+                <thead>
+                  <tr><th scope="col">Input</th><th scope="col" class="num">Applicants flagged</th><th scope="col" class="num">Defaulters identified</th><th scope="col" class="num">Flagged who defaulted</th></tr>
+                </thead>
+                <tbody>
+                  <tr><th scope="row">All 11 form fields</th><td class="num">24.5%</td><td class="num">56.2%</td><td class="num">18.5%</td></tr>
+                  <tr><th scope="row">Complete records (all 125 columns)</th><td class="num">24.5%</td><td class="num">57.5%</td><td class="num">19.0%</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="table-note">The threshold trades one error for another. At 10% the model
+              catches more than half of the defaulters, but it also flags many applicants who
+              would have repaid: most flagged applicants did not default.</p>
+          </section>
+
+          <section id="reliability">
+            <h2>Missing external scores</h2>
+            <p>The three external scores are the model's most important inputs, so the result
+              depends on how many you enter. With all three, the result is shown normally. With
+              one or two, it is shown with a warning. With none, no risk label is shown, because
+              in testing the model flagged almost no one. When scores are missing, the model's
+              average estimate is usually lower than the actual 8.07% rate.</p>
+            <div class="table-wrap" role="region" aria-label="Reliability table" tabindex="0">
+              <table class="data-table">
+                <caption>Reliability by external scores entered (test set, threshold 10%)</caption>
+                <thead>
+                  <tr><th scope="col">Scores entered</th><th scope="col">Reliability</th><th scope="col" class="num">ROC-AUC</th><th scope="col" class="num">Defaulters identified</th></tr>
+                </thead>
+                <tbody>
+                  <tr><th scope="row">1, 2 and 3</th><td>High</td><td class="num">0.742</td><td class="num">56.2%</td></tr>
+                  <tr><th scope="row">2 and 3</th><td>Slightly reduced</td><td class="num">0.734</td><td class="num">55.7%</td></tr>
+                  <tr><th scope="row">1 and 2</th><td>Reduced</td><td class="num">0.708</td><td class="num">46.6%</td></tr>
+                  <tr><th scope="row">1 and 3</th><td>Reduced</td><td class="num">0.709</td><td class="num">39.2%</td></tr>
+                  <tr><th scope="row">Score 2 only</th><td>Low</td><td class="num">0.697</td><td class="num">45.3%</td></tr>
+                  <tr><th scope="row">Score 3 only</th><td>Low</td><td class="num">0.695</td><td class="num">37.2%</td></tr>
+                  <tr><th scope="row">Score 1 only</th><td>Very low</td><td class="num">0.665</td><td class="num">14.6%</td></tr>
+                  <tr><th scope="row">None</th><td>No risk label shown</td><td class="num">0.644</td><td class="num">8.2%</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="table-note">With no scores the 10% threshold flagged only 2.9% of applicants.</p>
+          </section>
+
+          <section id="limits">
+            <h2>Limitations</h2>
+            <ul>
+              <li>The model shows associations in historical data, not causes. It describes how
+                similar applicants behaved in the past.</li>
+              <li>The model uses gender, which this form does not ask for. The trained model was
+                not changed, so a typical value is used. In some places, lenders may not be allowed
+                to use gender in credit decisions.</li>
+              <li>The model expects 125 input columns and the form collects up to 15 of them. This
+                is why the form is slightly less accurate than complete records (ROC-AUC 0.7418
+                against 0.7529).</li>
+              <li>Precision is low. At the 10% threshold most flagged applicants did not default.</li>
+              <li>The 10% threshold was the lowest value tested, so lower values were not
+                explored.</li>
+              <li>The data does not describe what the external scores measure, or whether income
+                and annuity are yearly or monthly.</li>
+              <li>The accuracy figures come from the project's own test set. They were not checked
+                on new data.</li>
+              <li>Patterns by age, occupation and education should not be used on their own to
+                approve or reject an applicant.</li>
+              <li>The figures on this page are fixed text and would need updating if the model
+                changed.</li>
+              <li>This site runs on a local development server. It is a portfolio project, not a
+                production system.</li>
+            </ul>
+          </section>
+
+          <section id="tech">
+            <h2>Technology</h2>
+            <p>Python (pandas, scikit-learn) for the analysis and model, MySQL for the business
+              analysis, Power BI for the dashboard, and Flask with plain HTML, CSS and JavaScript
+              for this website. The site loads no external libraries.</p>
+          </section>
+
+          <section id="faq">
+            <h2>Questions</h2>
+            <details class="faq">
+              <summary>Does "above the review threshold" mean the applicant will default?</summary>
+              <p>No. It means the estimate is at or above 10%, so the case is flagged for a closer
+                look. In testing, about 18.5% of applicants flagged this way, using the 11 form
+                fields, actually defaulted. Most did not. A person should make the final
+                decision.</p>
+            </details>
+            <details class="faq">
+              <summary>Why does the tool ask for external scores?</summary>
+              <p>They are the model's most important inputs: together they hold about 72% of its
+                measured importance. With fewer scores the estimate is less reliable, and with none
+                the tool shows no risk label.</p>
+            </details>
+            <details class="faq">
+              <summary>Why isn't gender asked?</summary>
+              <p>The form does not collect it. The trained model was kept unchanged, and it still
+                uses gender as one of its inputs, so a typical value is filled in. Removing gender
+                from the model would need retraining, and its results would change. In some places,
+                lenders may not be allowed to use gender in credit decisions.</p>
+            </details>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p><strong>Decision-support tool only.</strong> The model was trained on historical data
+        and shows associations, not causes. It uses information that this site does not collect,
+        including gender, which is filled with a typical value. Fields left blank are also filled
+        with typical values. Do not use it as the only basis for a credit decision.</p>
+      <p>Portfolio project built with Python, SQL, Power BI, Machine Learning and Flask.</p>
+    </div>
+  </footer>
+  <script src="/static/common.js?v=1"></script>
+</body>
+</html>
