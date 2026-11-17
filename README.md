@@ -99,7 +99,7 @@ The result is always worded "Above the review threshold" or "Below the review th
 
 The project uses `application_train.csv`: 307,511 rows and 122 columns, where `TARGET` is 1 for a defaulter (8.07%) and 0 otherwise.
 
-**The dataset is not included in this repository and must be obtained separately.** Its source is not documented here yet. Where a part of the project needs it, place the file at `data/raw/application_train.csv`.
+**The dataset was downloaded from the DataMites website as part of the project training materials.** The original dataset is not included in this repository and must be obtained separately. Where a part of the project needs it, place the file at `data/raw/application_train.csv`.
 
 The original notebook also read six other files for data checks (`bureau`, `bureau_balance`, `POS_CASH_balance`, `credit_card_balance`, `previous_application` and `installments_payments`). These are not included either.
 
